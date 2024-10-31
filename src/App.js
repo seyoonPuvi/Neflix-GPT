@@ -1,14 +1,7 @@
-import "./App.css";
+import Body from "./components/Body";
 
 function App() {
-  return (
-    <div
-      className="text-orange-600 font-bold text-center
-  "
-    >
-      seyoon puvi
-    </div>
-  );
+  return <Body />;
 }
 
 export default App;

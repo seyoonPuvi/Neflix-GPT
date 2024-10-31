@@ -3,6 +3,8 @@
 -create-react-app
 -installed tailwind css
 -configured tailwind.config.js
+-login page
+-sign in form
 
 # Features
 

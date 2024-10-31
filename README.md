@@ -3,8 +3,12 @@
 -create-react-app
 -installed tailwind css
 -configured tailwind.config.js
+-routing
 -login page
 -sign in form
+-sign up form
+-form validation
+-useRef Hook
 
 # Features
 

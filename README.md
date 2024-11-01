@@ -9,6 +9,12 @@
 -sign up form
 -form validation
 -useRef Hook
+-firebase setup
+-create sign up user account
+-created redux store
+-created user slice
+-implemented sign out
+-updated user profile info (name,photo)
 
 # Features
 

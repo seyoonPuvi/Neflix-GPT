@@ -1,14 +1,24 @@
 import React, { useState, useRef } from "react";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  updateProfile,
+} from "firebase/auth";
 import Header from "./Header";
 import { checkValidData } from "../utils/validate";
+import { auth } from "../utils/firebase";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { addUser } from "../utils/userSlice";
 
 const Login = () => {
+  const dispatch = useDispatch();
   const [isSignIn, toggleSignIn] = useState(true);
   const [errorMessage, setErrorMessage] = useState(null);
   const email = useRef(null);
   const password = useRef(null);
   const name = useRef(null);
-
+  const navigate = useNavigate();
   const handleButtonClick = () => {
     const nameValue = name.current ? name.current.value : "";
     const emailValue = email.current ? email.current.value : "";
@@ -20,8 +30,49 @@ const Login = () => {
       emailValue,
       passwordValue
     );
-
     setErrorMessage(message);
+    if (message) return;
+
+    if (!isSignIn) {
+      // Sign Up logic here
+      // Create a new user in your database
+      createUserWithEmailAndPassword(auth, emailValue, passwordValue)
+        .then((userCredential) => {
+          // Signed up
+          updateProfile(auth.currentUser, {
+            displayName: nameValue,
+            photoURL:
+              "https://i.postimg.cc/rpqJzST6/the-batman-movie-poster-4k-wallpaper-1210d.jpg",
+          })
+            .then(() => {
+              // Profile updated!
+              const { uid, displayName, email, photoURL } = auth.currentUser;
+              dispatch(addUser({ uid, displayName, email, photoURL }));
+              navigate("/browse");
+            })
+            .catch((error) => {
+              navigate("/error");
+            });
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setErrorMessage(errorCode + " " + errorMessage);
+          // ..
+        });
+    } else {
+      // sign in logic
+      signInWithEmailAndPassword(auth, emailValue, passwordValue)
+        .then((userCredential) => {
+          // Signed in
+          navigate("/browse");
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setErrorMessage(errorCode + " " + errorMessage);
+        });
+    }
   };
 
   return (
